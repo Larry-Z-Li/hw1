@@ -22,11 +22,8 @@ void printAllVals(Node*& node)
 
 void deallocateNodes(Node*& node)
 {
-    if(node->next == NULL)
-    {
-        delete(node);
+    if(node == NULL)
         return;
-    }
     while(node->next!= NULL)
     {
         Node* temp = node->next;
@@ -34,8 +31,11 @@ void deallocateNodes(Node*& node)
         node = temp;
     }
     delete(node);
+    node = NULL;
     return;
 }
+
+
 int main()
 {
     cout << "Beginning test." << endl;
@@ -79,7 +79,7 @@ int main()
     cout << "." << endl;
     cout << "Result should be in: NULL, odds: 3 3 3 , evens: 2 2 2 ." << endl;
 
-    delete(evens);delete(odds);
+    deallocateNodes(evens);deallocateNodes(odds);
 
     cout << "Creating 2 nodes of 2, 2 for in and NULL for odds and evens." <<endl;
     temp2 = new Node(2, NULL);
@@ -87,7 +87,7 @@ int main()
     odds = NULL;
     evens = NULL;
     cout << "Calling split(), in: ";
-    split(temp2, odds, evens);
+    split(temp1, odds, evens);
     printAllVals(temp1);
     cout << ", odds: ";
     printAllVals(odds);

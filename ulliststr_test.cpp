@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
     ULListStr testList;    //Test list construction
 
     //Begin test
-    cout << "Item array max: " << ARRSIZE << ", begin test, inserting 11 ordered numbers through push_back()" << endl;
+    cout << "Item array max: " << ARRSIZE << ", begin test, inserting 11 ordered numbers 12-22 through push_back()" << endl;
     for(int i = 12; i < 23; i++)             //Insert 11 elements through push_back()
     {
         testList.push_back(to_string(i));
@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
 
     cout << "Testing back(): " << testList.back() << ", result should be 22." << endl;
 
-    cout << "Inserting 11 ordered numbers through push_front()" << endl;
+    cout << "Inserting 11 ordered numbers 1-11 through push_front()" << endl;
     for(int i = 11; i > 0; i--)
     {
         testList.push_front(to_string(i));

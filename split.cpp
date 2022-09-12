@@ -15,47 +15,142 @@ the function below should be the only one in this file.
 
 /* Add a prototype for a helper function here if you need */
 
+
 void split(Node*& in, Node*& odds, Node*& evens)
+/* General approach: creating only one new node for odds and even for the first elements, pointing to subsequent
+ * existing nodes in "in" as the function progresses. This is because odds and even cannot contain the first
+ * node of "in" while "in" has to be set to NULL at the end of the program, and references cannot be redirected,
+ * causing the inevitable deletion of the first node.
+ */
+
 {
     if(in == NULL)
     {
-        return;
-    }
-    Node* temp = new Node(in->value, NULL);                  //Makes new Node, deallocates in later
-
-    if(in->value % 2 == 0)                                      //Case if EVEN
-    {
-        if(evens == NULL)                                       //Case that value is the first even
-        {
-            evens = temp;
-            if(in->next != NULL)                                //Triggers when there are more nodes
-                split(in->next, odds, evens);
-        }
-        else
-        {
-            evens->next = temp;
-            if(in->next != NULL)                                //Triggers when there are more nodes
-                split(in->next,odds,evens->next);
-        }
-    }
-    else                                                        //Case if ODD
-    {
-        if(odds == NULL)                                        //Case that value is the first odd
-        {
-            odds = temp;
-            if(in->next != NULL)                                //Triggers when there are more nodes
-                split(in->next, odds, evens);
-        }
-        else
-        {
-            odds->next = temp;
-            if(in->next != NULL)                                //Triggers when there are more nodes
-                split(in->next,odds->next,evens);
-        }
+        return;                                                 // duh
     }
 
-    delete(in);                                                 //Deallocate in nodes
-    in=NULL;
+    if(evens == NULL && odds == NULL)                           // Setting up deletion of the first node of "in."
+    {
+        if(in->value % 2 == 0)
+        {
+            evens = new Node(in->value, NULL);
+            if(in->next == NULL)
+            {
+                delete(in);
+                in = NULL;
+                return;                                                 // There exists only one node in "in.
+            }
+            else
+            {
+                split(in->next, odds, evens);                // Function recurses, but in this instance, "in" is deleted after it exits.
+                delete(in);
+                in = NULL;
+            }
+        }
+        else                                                            // In the case of odd number, same approach as above.
+        {
+            odds = new Node(in->value, NULL);
+            if(in->next == NULL)
+            {
+                delete(in);
+                in = NULL;
+                return;
+            }
+            else
+            {
+                split(in->next, odds, evens);
+                delete(in);
+                in = NULL;
+            }
+        }
+    }
+
+    else if(in->value % 2 == 0)
+    {
+        if(evens == NULL)                                       // In the case that the first node has already been created, just not in "evens."
+        {
+            evens = in;
+            if(in->next == NULL)                                // There exists only 2 node in "in."
+            {
+                if(odds == NULL)
+                {
+                    return;
+                }
+                else
+                {
+                    odds->next = nullptr;
+                    return;
+                }
+            }
+            else
+            {
+                split(in->next, odds, evens);         // Function recurses on the first evens node
+            }
+        }
+        else                                                    // There exists node in evens, so function recurses on next "evens" node, set to current "in" node
+        {
+            evens->next = in;
+            if(in->next == NULL)
+            {
+                if(odds == NULL)                                // Recallibrating the last pointers .
+                {
+                    return;
+                }
+                else
+                {
+                    odds->next = nullptr;
+                    return;
+                }
+            }
+            else
+            {
+                split(in->next, odds, evens->next);
+            }
+        }
+    }
+    else                                                          // Same as above, but in the case that val is odd.
+    {
+        if(odds == NULL)                                          // In the case that the first node has already been created, just not in "odds."
+        {
+            odds = in;
+            if(in->next == NULL)
+            {
+                if(evens == NULL)
+                {
+                    return;
+                }
+                else
+                {
+                    evens->next = nullptr;
+                    return;
+                }
+            }
+            else
+            {
+                split(in->next,odds,evens);
+            }
+        }
+        else                                                       // In the case that odds contain at least 1 node.
+        {
+            odds->next = in;
+            if(in->next == NULL)
+            {
+                if(evens == NULL)
+                {
+                    return;
+                }
+                else
+                {
+                    evens->next = nullptr;
+                    return;
+                }
+            }
+            else
+            {
+                split(in->next, odds->next, evens);
+            }
+        }
+    }
     return;
 }
 
